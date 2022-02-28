@@ -232,7 +232,7 @@ void TRFControlRoutine(void)
 				IL* lpointer;
 				int charcount;
 
-				if (paramset.ngs != 1) {
+				if (paramset.ngs != 1 && 0) {
 					fprintf(destdfp,"Tandem Repeats Finder Program written by:\n\n");
 					fprintf(destdfp,"Gary Benson\n");
 					fprintf(destdfp,"Program in Bioinformatics\n");
@@ -250,31 +250,32 @@ void TRFControlRoutine(void)
 					}
 
 				} else {
-					fprintf(destdfp,"\n\nSequence: %s\n\n\n\nParameters: %d %d %d %d %d %d %d\n\n\n",
-							seq.name,paramset.match,paramset.mismatch,paramset.indel,paramset.PM,paramset.PI,paramset.minscore,paramset.maxperiod);
+					/* fprintf(destdfp,"\n\nSequence: %s\n\n\n\nParameters: %d %d %d %d %d %d %d\n\n\n", */
+							/* seq.name,paramset.match,paramset.mismatch,paramset.indel,paramset.PM,paramset.PI,paramset.minscore,paramset.maxperiod); */
 				}
 
 				for(lpointer=GlobalIndexList;lpointer!=NULL;lpointer=lpointer->next)
 				{
-					fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f %s ",
-							lpointer->first, lpointer->last, lpointer->period,
-							lpointer->copies, lpointer->size, lpointer->matches,
-							lpointer->indels, lpointer->score, lpointer->acount,
-							lpointer->ccount, lpointer->gcount, lpointer->tcount,
-							lpointer->entropy, lpointer->pattern );
-					for(charcount=lpointer->first; charcount<=lpointer->last;charcount++)
-						fprintf(destdfp,"%c", Sequence[charcount]);
+				  fprintf(destdfp, ">%p\n", lpointer);
+					/* fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f", */
+					/* 		lpointer->first, lpointer->last, lpointer->period, */
+					/* 		lpointer->copies, lpointer->size, lpointer->matches, */
+					/* 		lpointer->indels, lpointer->score, lpointer->acount, */
+					/* 		lpointer->ccount, lpointer->gcount, lpointer->tcount, */
+					/* 		lpointer->entropy); */
+					/* for(charcount=lpointer->first; charcount<=lpointer->last;charcount++) */
+					/* 	fprintf(destdfp,"%c", Sequence[charcount]); */
 
 					/* print short flanks to .dat file */
-					if (paramset.ngs) {
+					if (paramset.ngs || 1) {
 						int flankstart,flankend;
 
-	  					flankstart = lpointer->first - 50; 
+	  					flankstart = lpointer->first - 150; 
 						flankstart=max(1,flankstart);
-						flankend = lpointer->last + 50; 
+						flankend = lpointer->last + 150; 
 						flankend=min(Length,flankend);
 
-						fprintf(destdfp," ");				
+						/* fprintf(destdfp," ");				 */
 						if (lpointer->first == 1) {
 							fprintf(destdfp,".");
 						} else {
@@ -282,7 +283,9 @@ void TRFControlRoutine(void)
 								fprintf(destdfp,"%c", Sequence[charcount]);
 						}
 
-						fprintf(destdfp," ");	
+						fprintf(destdfp, "%s", lpointer->pattern);
+
+						/* fprintf(destdfp," ");	 */
 						if (lpointer->last == Length) {
 							fprintf(destdfp,".");
 						} else {
