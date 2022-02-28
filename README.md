@@ -1,3 +1,13 @@
+## Note to self
+Use the flags: `trf ./1000.fna 2 5 7 80 10 50 2000 -l 10 -f -d`
+
+Flank length hard coded to +/-150  
+Disabled all other output  
+Output written to the .dat file  
+
+<hr>
+
+
 # TRF
 **Tandem Repeats Finder:** https://tandem.bu.edu/trf/trf.html  
 **Tandem Repeats Database:** http://tandem.bu.edu/cgi-bin/trdb/trdb.exe
