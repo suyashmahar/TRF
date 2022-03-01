@@ -26,6 +26,13 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include <math.h>
 #include "tr30dat.h"
 
+int fast_mod(const int input, const int ceil) {
+    // apply the modulo operator only when needed
+    // (i.e. when the input is greater than the ceiling)
+    return input >= ceil ? input % ceil : input;
+    // NB: the assumption here is that the numbers are positive
+}
+
 
 /* March 3,1999 removed main to replace with OnStartSearch() . AR */
 /* last update May 20 to test multiple tuple sizes */
@@ -272,21 +279,21 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 		if(matches_in_diagonal>=tuplesize)
 		{
 			/* recenter band */
-			Bandcenter[r]=(matchatmax_col-1+size)%size;
+			Bandcenter[r]=fast_mod(matchatmax_col-1+size, size);
 		}
 		else
 		{
 
 			/* don't recenter */
-			Bandcenter[r]=(Bandcenter[r+1]-1+size)%size;
+			Bandcenter[r]=fast_mod(Bandcenter[r+1]-1+size, size);
 		}
 
 		/* change of bandcenter determines which inputs go into which
 		   cells */
 
-		k=(Bandcenter[r]-Bandcenter[r+1]+size)%size;
+		k=fast_mod(Bandcenter[r]-Bandcenter[r+1]+size, size);
 		if(size-k<=k) k=-(size-k);
-		c=(Bandcenter[r]+w)%size;
+		c=fast_mod(Bandcenter[r]+w, size);
 		if(k<=-1)           /* band shifts left */
 		{
 			k=-k;
@@ -301,7 +308,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 				pcurr--;
 				pdiag--;
 				pup--;
-				c=(c-1+size)%size;
+				c=fast_mod(c-1+size, size);
 			}
 			i=k-1;
 			*pdiag+=(match_yes_no=match(currchar,EC[c]));
@@ -309,14 +316,14 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 			test_trace_and_backwards_maxscore;
 			test_maxrowscore_with_match;
 			pcurr--;
-			c=(c-1+size)%size;
+			c=fast_mod(c-1+size, size);
 			for(i=k-2;i>=0;i--)
 			{
 				pleft=(*pcurr=max2(0,pleft))+Delta;
 				test_trace_and_backwards_maxscore;
 				test_maxrowscore_without_match;
 				pcurr--;
-				c=(c-1+size)%size;
+				c=fast_mod(c-1+size, size);
 			}
 		}
 		else            /* band shifts right */
@@ -329,7 +336,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 				test_trace_and_backwards_maxscore;
 				test_maxrowscore_without_match;
 				pcurr--;
-				c=(c-1+size)%size;
+				c=fast_mod(c-1+size, size);
 			}
 			i=2*w-k;
 			pleft=(*pcurr=max3(0,*pup,pleft))+Delta;
@@ -337,7 +344,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 			test_maxrowscore_without_match;
 			pcurr--;
 			pup--;
-			c=(c-1+size)%size;
+			c=fast_mod(c-1+size, size);
 			for(i=2*w-k-1;i>=0;i--)
 			{
 				*pdiag+=(match_yes_no=match(currchar,EC[c]));
@@ -347,7 +354,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 				pcurr--;
 				pdiag--;
 				pup--;
-				c=(c-1+size)%size;
+				c=fast_mod(c-1+size, size);
 			}
 		}
 		pcurr=&S[r][0];
@@ -458,25 +465,25 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 			if(matches_in_diagonal>=tuplesize)
 			{
 				/* recenter band */
-				Bandcenter[r]=(matchatmax_col+1)%size;
+				Bandcenter[r]=fast_mod(matchatmax_col+1, size);
 			}
 			else
 			{
 
 				/* don't recenter */
-				Bandcenter[r]=(Bandcenter[r-1]+1)%size;
+				Bandcenter[r]=fast_mod(Bandcenter[r-1]+1,size);
 			}
 
 			/* change of bandcenter determines which inputs go into which
 			   cells */
 
-			k=(Bandcenter[r]-Bandcenter[r-1]+size)%size;
+			k=fast_mod(Bandcenter[r]-Bandcenter[r-1]+size, size);
 			if(size-k<=k) k=-(size-k);
 			if(k>=1)          /* band shifts right */
 			{
 				pdiag=&Diag[k-1];
 				pup=&Up[k];
-				c=(Bandcenter[r]-w+size)%size;
+				c=fast_mod(Bandcenter[r]-w+size, size);
 				for(i=0;i<=2*w-k;i++)
 				{
 					*pdiag+=(match_yes_no=match(currchar,EC[c]));
@@ -486,7 +493,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 					pcurr++;
 					pdiag++;
 					pup++;
-					c=(c+1)%size;
+					c=fast_mod(c+1, size);
 				}
 				i=2*w-k+1;
 				*pdiag+=(match_yes_no=match(currchar,EC[c]));
@@ -494,20 +501,20 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 				test_trace_and_forward_maxscore;
 				test_maxrowscore_with_match;
 				pcurr++;
-				c=(c+1)%size; 
+				c=fast_mod(c+1, size); 
 				for(i=2*w-k+2;i<=2*w;i++)
 				{
 					pleft=(*pcurr=max2(0,pleft))+Delta;
 					test_trace_and_forward_maxscore;
 					test_maxrowscore_without_match;
 					pcurr++;
-					c=(c+1)%size;
+					c=fast_mod(c+1, size);
 				}
 			}
 			else          /* band shifts left */
 			{
 				k=-k;
-				c=(Bandcenter[r]-w+size)%size;
+				c=fast_mod(Bandcenter[r]-w+size, size);
 				pup=&Up[0];
 				pdiag=&Diag[0];
 				for(i=0;i<=k-1;i++)
@@ -516,7 +523,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 					test_trace_and_forward_maxscore;
 					test_maxrowscore_without_match;
 					pcurr++;
-					c=(c+1)%size;
+					c=fast_mod(c+1, size);
 				}
 				i=k;
 				pleft=(*pcurr=max3(0,*pup,pleft))+Delta;
@@ -524,7 +531,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 				test_maxrowscore_without_match;
 				pcurr++;
 				pup++;
-				c=(c+1)%size;
+				c=fast_mod(c+1, size);
 				for(i=k+1;i<=2*w;i++)
 				{
 					*pdiag+=(match_yes_no=match(currchar,EC[c]));
@@ -534,7 +541,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 					pcurr++;
 					pdiag++;
 					pup++;
-					c=(c+1)%size;
+					c=fast_mod(c+1, size);
 				}
 			}
 			pcurr=&S[r][0];
@@ -1251,7 +1258,7 @@ void get_narrowband_pair_alignment_with_copynumber(int size,
 {\
 	length++;\
 	if(c==fullcopy)Copynumber++;\
-	if(option==LOCAL){fill_align_pair(x[realr],y[c],length,realr,c);c=(c-1+size)%size;}\
+	if(option==LOCAL){fill_align_pair(x[realr],y[c],length,realr,c);c=fast_mod(c-1+size, size);} \
 	else {fill_align_pair(x[realr],y[c],length,realr,c+Maxrealcol-Maxcol);c=c-1;}\
 	realr--;\
 	r--;\
@@ -1263,7 +1270,7 @@ else
 	if (S[r][i]==S[r-1][upi]+Delta)\
 {\
 	length++;\
-	if(option==LOCAL) {fill_align_pair(x[realr],'-',length,realr,(c+1)%size);}\
+	if(option==LOCAL) {fill_align_pair(x[realr],'-',length,realr,fast_mod(c+1, size);} ) \
 	else {fill_align_pair(x[realr],'-',length,realr,c+1+Maxrealcol-Maxcol);}\
 	realr--;\
 	r--;\
@@ -1283,7 +1290,7 @@ else if (S[r][i]==S[r][i-1]+Delta)\
 {\
 	length++;\
 	if(c==fullcopy)Copynumber++;\
-	if(option==LOCAL){fill_align_pair('-',y[c],length,realr+1,c);c=(c-1+size)%size;}\
+	if(option==LOCAL){fill_align_pair('-',y[c],length,realr+1,c);c=fast_mod(c-1+size, size);} \
 	else {fill_align_pair('-',y[c],length,realr+1,c+Maxrealcol-Maxcol);c=c-1;}\
 	i=i-1;\
 }\
@@ -4203,7 +4210,7 @@ void newtupbo(void)
 										}
 										else    /* d is a large distance */
 										{
-											narrowbandwrap(i,Classlength,
+											narrowbandwrap(i,Classlength, 
 													max(MINBANDRADIUS,d_range(Classlength)), min(2*max(MINBANDRADIUS,d_range(Classlength)), (Classlength/3) ), 
 													WITHCONSENSUS,RECENTERCRITERION);
 											Cell_count[Classlength]+=(Rows*(2*max(MINBANDRADIUS,

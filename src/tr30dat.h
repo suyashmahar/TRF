@@ -83,7 +83,7 @@ int counterInSeq = 0;
 
 /* use semantic versioning, please: https://semver.org/ */
 #ifndef PACKAGE_VERSION
-#define versionstring "4.10.0"
+#define versionstring "4.10.1"
 #else
 #define versionstring PACKAGE_VERSION
 #endif
