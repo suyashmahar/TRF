@@ -337,9 +337,9 @@ void TRFControlRoutine(void)
 	 **********************************************************/
 
 	/* generate the parameter string to be used in file names */
-	sprintf(paramstring,"%d.%d.%d.%d.%d.%d.%d",
-			paramset.match,paramset.mismatch,paramset.indel,
-			paramset.PM,paramset.PI,paramset.minscore,paramset.maxperiod);
+	/* sprintf(paramstring,"%d.%d.%d.%d.%d.%d.%d", */
+			/* paramset.match,paramset.mismatch,paramset.indel, */
+			/* paramset.PM,paramset.PI,paramset.minscore,paramset.maxperiod); */
 
 	/* open sumary table file */
 	sprintf(desth,"%s.%s.summary.html",prefix,paramstring);
@@ -442,11 +442,11 @@ void TRFControlRoutine(void)
 				/* only for the first one write the header */
 				if (i==1) {
 					if (paramset.ngs != 1) {
-						fprintf(destdfp,"Tandem Repeats Finder Program written by:\n\n");
-						fprintf(destdfp,"Gary Benson\n");
-						fprintf(destdfp,"Program in Bioinformatics\n");
-						fprintf(destdfp,"Boston University\n");
-						fprintf(destdfp,"Version %s\n", versionstring);
+						/* fprintf(destdfp,"Tandem Repeats Finder Program written by:\n\n"); */
+						/* fprintf(destdfp,"Gary Benson\n"); */
+						/* fprintf(destdfp,"Program in Bioinformatics\n"); */
+						/* fprintf(destdfp,"Boston University\n"); */
+						/* fprintf(destdfp,"Version %s\n", versionstring); */
 					}
 				}
 
@@ -460,23 +460,21 @@ void TRFControlRoutine(void)
 					}
 
 				} else {
-					fprintf(destdfp,"\n\nSequence: %s\n\n\n\nParameters: %d %d %d %d %d %d %d\n\n\n",
-							seq.name,paramset.match,paramset.mismatch,paramset.indel,paramset.PM,paramset.PI,paramset.minscore,paramset.maxperiod);
+					/* fprintf(destdfp,"\n\nSequence: %s\n\n\n\nParameters: %d %d %d %d %d %d %d\n\n\n", */
+							/* seq.name,paramset.match,paramset.mismatch,paramset.indel,paramset.PM,paramset.PI,paramset.minscore,paramset.maxperiod); */
 				}
 
 				for(lpointer=GlobalIndexList;lpointer!=NULL;lpointer=lpointer->next)
 				{
-					fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f %s ",
-							lpointer->first, lpointer->last, lpointer->period,
-							lpointer->copies, lpointer->size, lpointer->matches,
-							lpointer->indels, lpointer->score, lpointer->acount,
-							lpointer->ccount, lpointer->gcount, lpointer->tcount,
-							lpointer->entropy, lpointer->pattern );
-					for(charcount=lpointer->first; charcount<=lpointer->last;charcount++)
-						fprintf(destdfp,"%c", Sequence[charcount]);
-
+					/* fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f %s ", */
+					/* 		lpointer->first, lpointer->last, lpointer->period, */
+					/* 		lpointer->copies, lpointer->size, lpointer->matches, */
+					/* 		lpointer->indels, lpointer->score, lpointer->acount, */
+					/* 		lpointer->ccount, lpointer->gcount, lpointer->tcount, */
+					/* 		lpointer->entropy, lpointer->pattern ); */
+					fprintf(destdfp, "\n>%p\n", lpointer);
 					/* print short flanks to .dat file */
-					if (paramset.ngs) {
+					if (paramset.ngs || 1) {
 						int flankstart,flankend;
 
 	  					flankstart = lpointer->first - 50; 
@@ -484,15 +482,17 @@ void TRFControlRoutine(void)
 						flankend = lpointer->last + 50; 
 						flankend=min(Length,flankend);
 
-						fprintf(destdfp," ");				
+						/* fprintf(destdfp," ");				 */
 						if (lpointer->first == 1) {
 							fprintf(destdfp,".");
 						} else {
 							for(charcount=flankstart; charcount<lpointer->first;charcount++)
 								fprintf(destdfp,"%c", Sequence[charcount]);
 						}
+						for(charcount=lpointer->first; charcount<=lpointer->last;charcount++)
+							fprintf(destdfp,"%c", Sequence[charcount]);
 
-						fprintf(destdfp," ");	
+						/* fprintf(destdfp," ");	 */
 						if (lpointer->last == Length) {
 							fprintf(destdfp,".");
 						} else {
