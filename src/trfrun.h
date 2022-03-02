@@ -256,7 +256,7 @@ void TRFControlRoutine(void)
 
 				for(lpointer=GlobalIndexList;lpointer!=NULL;lpointer=lpointer->next)
 				{
-				  fprintf(destdfp, ">%p\n", lpointer);
+				  fprintf(destdfp, ">%p,CN=%f\n", lpointer, lpointer->copies);
 					/* fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f", */
 					/* 		lpointer->first, lpointer->last, lpointer->period, */
 					/* 		lpointer->copies, lpointer->size, lpointer->matches, */
